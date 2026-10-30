@@ -39,11 +39,17 @@ const addDays = (day, n) => {
   const [y, m, d] = day.split("-").map(Number);
   return new Date(Date.UTC(y, m - 1, d + n)).toISOString().slice(0, 10);
 };
-function visitsFor(firstLook, verdict) {
+// S24a's rule (its prereg, R/s24a_score.R; S24 brought the runner to it): week 2; the first look F when 2 < F < V; W + 2
+// after an adjustment window W when W + 2 < V and no look so far falls after W; week 4 when V >= 6 and no look falls
+// between week 2 and V; the verdict week V.
+function visitsFor(firstLook, verdict, adjustTo = null) {
+  const last = Math.max(verdict, 2);
   const v = [{ week: 2, days: 1, purpose: "safety" }];
-  if (firstLook > 2 && firstLook < verdict) v.push({ week: firstLook, days: 2, purpose: "first_look" });
-  v.push({ week: Math.max(verdict, 2), days: 3, purpose: "verdict" });
-  return v;
+  if (firstLook > 2 && firstLook < last) v.push({ week: firstLook, days: 2, purpose: "first_look" });
+  if (adjustTo != null && adjustTo + 2 < last && !v.some((x) => x.week > adjustTo)) v.push({ week: adjustTo + 2, days: 2, purpose: "safety" });
+  if (last >= 6 && !v.some((x) => x.week > 2 && x.week < last)) v.push({ week: 4, days: 2, purpose: "first_look" });
+  v.push({ week: last, days: 3, purpose: "verdict" });
+  return v.sort((a, b) => a.week - b.week);
 }
 /** UTC time at which the clock in `zone` reads `day` hh:mm. */
 function localTime(day, hh, zone, mm = 0) {
@@ -174,7 +180,7 @@ const stored = (page) =>
     return {
       db: true,
       keys,
-      trial: trial && { id: trial.id, side: trial.side, goal: trial.goal, concerns: trial.concerns, stopped: trial.stopped, verdicts: trial.verdicts.map((v) => ({ week: v.week, purpose: v.purpose, verdict: v.result.verdict })), plan: { verdictWeek: trial.plan.verdictWeek, firstLookWeek: trial.plan.firstLookWeek, visits: trial.plan.visits } },
+      trial: trial && { id: trial.id, side: trial.side, goal: trial.goal, concerns: trial.concerns, stopped: trial.stopped, verdicts: trial.verdicts.map((v) => ({ week: v.week, purpose: v.purpose, verdict: v.result.verdict, improvement: v.result.improvement, mde: v.result.mde })), plan: { verdictWeek: trial.plan.verdictWeek, firstLookWeek: trial.plan.firstLookWeek, adjustToWeek: trial.plan.adjustToWeek ?? null, visits: trial.plan.visits } },
       photos: photos.sort((a, b) => a.takenAt - b.takenAt),
     };
   });
@@ -462,7 +468,7 @@ async function runIn(page, R, days = 4) {
 
 async function visits(page, R, upTo) {
   const startDay = addDays(R.start, 4);
-  const plan = visitsFor(R.outcome.plan.firstLookWeek, R.outcome.plan.verdictWeek);
+  const plan = visitsFor(R.outcome.plan.firstLookWeek, R.outcome.plan.verdictWeek, R.outcome.plan.adjustToWeek ?? null);
   R.outcome.expectedVisits = plan;
   await dashboardAt(page, R, startDay, "trial:start_today");
   if (R.type === "P1") {
