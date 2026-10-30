@@ -1,0 +1,11 @@
+# Every text file is stored and checked out with LF line endings on every system, and the data files the R steps wrote
+# are stored byte for byte, so a clone holds exactly the files that were tested.
+* text=auto eol=lf
+public/demo/** -text
+src/data/** -text
+test/fixtures/** -text
+*.jpg binary
+*.png binary
+*.ico binary
+*.task binary
+*.wasm binary

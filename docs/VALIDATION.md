@@ -1,0 +1,58 @@
+# How Fair Trial was validated
+
+Fair Trial is a measuring instrument: it tells a person whether a product changed their skin. So every part of it was tested against a truth known before the test, and nothing was tuned on the test.
+
+## The method
+
+Every step ran in the same order:
+
+1. The bar was written down before the test, in the step's scoring script.
+2. Development used its own data freely.
+3. The code was frozen: an md5 of every file.
+4. A held-out set, drawn by a fixed seed and unseen during development, was scored once.
+5. A report gave the result, met or missed. Findings read after the result never changed it. A missed bar was never rescored; its fix went into the next step and was tested on fresh data.
+
+No public dataset holds repeated selfies with a known product on one half of the face, so the truth was built: photos with known faults, YouCam's Skin Simulation at known intensities, composites with a known product half, and simulated trials with known outcomes. Every person in every test is synthetic, made with YouCam's AI Image Generator across Fitzpatrick skin types I to VI. No real person's photo was used.
+
+Seeds are 202610290 plus the step number, or a date-based seed named in the step's report.
+
+## The contest (S01 to S03)
+
+- **S01 Requirements.** The contest's rules and requirements mapped to build items: 19 of 19 required items. Met.
+- **S02 Earlier rounds.** This sponsor's two earlier hackathons on Devpost (280 projects, 7 winners) coded on 12 features against seeded non-winners. The features that set winners apart were honesty about limits (86% of winners, 42% of the rest) and named tests (71% and 45%). Met.
+- **S03 The API.** A synthetic person from the AI Image Generator (1 unit), then the File API and an SD skin analysis on 4 concerns (9 units): raw scores and full-size masks came back.
+
+## The evidence (S04 and S05)
+
+- **S04 Evidence table.** 18 PubMed searches for systematic reviews, meta-analyses and randomised trials, 2010 to 2026 (16 actives, the split-face design, imaging repeatability), 228 records. 19 active rows and 5 background rows, each with the concerns its trials measured, the first assessment, the verdict week and the expected early effects. Extracted twice, by reading and by an R re-extraction of the numbers: 104 of 109 checks agreed at first, all 5 differences had one cause, and agreement after adjudication was 100%. Met. Abstracts only: every number is one the abstract states.
+- **S05 The consumer problem.** Every number the story uses has a source line: 16 numbers. Met.
+
+## The instrument (S06 to S10c)
+
+- **S06 What YouCam returns.** A parser for every documented field (8 of 8 seen in development responses). The raw score is the measurement; the display score is never shown as one. Met.
+- **S07 Capture gate.** 24 synthetic people, 20 versions of each photo: known faults (exposure, side light, colour cast, blur, roll, distance) and benign re-captures. Held-out: every fault type caught (100%), 77 of 84 good photos accepted (91.7%). Met. Finding: all 7 good photos rejected were of one person with type VI skin, because a fixed side-light limit read natural shading on deep skin as bad light. Fix: side light is judged only as a change from the person's own first photo.
+- **S08 Photo noise.** One held-out person per skin type, photographed three times with small random changes and no true change: the smallest detectable change for each concern, with bootstrap confidence intervals. Met. Nine concerns can compare one half of the face with the other: moisture, texture, wrinkles, dark circles, eye bags, oiliness, redness, dark spots and tear troughs. Pores are marginal; acne and radiance are not usable at this noise.
+- **S09 Known changes.** Skin Simulation improved three held-out faces (light, medium and dark) at intensities 0, 0.5 and 1.0. Bar: rank correlation of at least 0.8 between intensity and raw score, and the right direction on every face. Missed: met for eye bags (0.95) and wrinkles (0.84); dark spots 0.79, texture 0.69, dark circles 0.58, redness 0.13. Raw scores rose with intensity on 3 of 3 faces for every concern except redness (1 of 3).
+- **S10 Half-face measurement.** Composites with a known product half: the simulated skin on one half only, joined at the facial midline the app uses. The product side was found in 48 of 50 true changes (96%), and 0 of 54 calls pointed the wrong way: met. The bare half stayed within its own noise in 38 of 54 (70.4%, bar 95%): missed. Finding: YouCam reads the face as a whole, so part of a one-sided change shows on the other half. The half-face difference keeps 92 to 103% of the true change for eye bags, dark circles, wrinkles, moisture and tear troughs, and 51 to 70% for dark spots, redness, oiliness and texture. It shrinks a difference toward zero and never flips it, so verdicts on those four are conservative.
+- **S10b Light judged off the skin.** The S07 gate rejected all six composites as side light: a true one-sided change looked like uneven light on the cheeks. Light is now judged on the whites of the eyes and the lips, which no skincare product changes. Held-out: every fault type caught, 95.4% of benign re-captures accepted, and 88.9% of true skin changes accepted (bar 95%): missed. Two causes: a clipping check that fair skin tripped, and an eye-white reading that failed on deep-set eyes.
+- **S10c The gate on new people.** Both causes fixed (the whites of the eyes sampled beside the iris; a pixel counts as clipped only when all three channels are), then tested on 12 new synthetic people chosen for their eye shapes and skin types, 288 photos: every fault type caught (100%), 72 of 72 benign re-captures and 48 of 48 true skin changes accepted, for every eye shape and every skin type. Met.
+
+## The verdict (S11 to S13b)
+
+- **S11 Verdict engine.** Simulated split-face trials with known effects, in units of the S08 noise. Development changed the engine: the day is the unit, the noise is the spread of day means in the run-in and the check-in and never less than the camera's, judged with a one-sided Student t test; "Working" at alpha 0.04 and "Stop and check" at 0.05 per visit. Held-out, 40 noise scenarios of 2,000 trials: false "Working" for a product that does nothing 0.9 to 4.7% in 39 scenarios and 5.4% in one, against a bar of 5%: missed in that one. A follow-up of that scenario with 20,000 trials gave 3.9%, as the exact test predicts; the frozen result stands. "Working" at an effect of one smallest detectable change: 91.3 to 99.5% (bar 80%). "Stop and check" on a worsening of that size: 97.9 to 100% (bar 95%).
+- **S12 Trial planner.** 80 real ingredient lists from Open Beauty Facts, the actives coded by hand under written rules (an independent R coder agreed on 79 of 80). Held-out, 40 lists: 55 of 55 actives found, 0 false finds; 400 of 400 plans as the evidence table says, on all 10 fields. Met.
+- **S13 Safety guard.** Truth frozen before any rule was written: real FDA prescription and OTC labels from openFDA, fresh product lists, and 900 intake cases. Held-out: 27 of 30 prescription labels sent to a doctor or pharmacist and 23 of 30 OTC labels handled as the allowlist says (bars 30 of 30): missed. 0 of 30 everyday products called a medicine, the "not an ingredient list" call right on 30 of 30, 600 of 600 person cases right, 0 claim words in its messages: met.
+- **S13b Guard fix.** Fixed on the spent sets, then tested once on fresh labels and lists: 32 of 40 prescription labels and 35 of 40 OTC labels (missed again); 0 of 40 everyday products called a medicine (met); every regression held. The eight prescription labels that got through carried drug names no earlier set had shown. So the app also asks the person whether a doctor or pharmacist gave them the product as a medicine; yes means see a doctor or pharmacist first.
+
+## The product (S14 to S18)
+
+- **S14 Server and key.** The server routes, with one live analysis of a synthetic face: 4 of 4 concerns measured on both halves, the 9 units the docs state, 29 of 29 bad requests refused, the unit floor held, the key in 0 of 90 responses, no image kept. All 7 bars met.
+- **S15 Guided capture on a phone.** Headless Chrome on a phone profile, with a camera that showed 20 held-out fault segments: 20 of 20 photos taken and passing again on the still-photo check, 0 taken while a fault was on screen, the right prompt shown and spoken in 20 of 20, the photo within 10 s of the fault clearing in 20 of 20 (median 0.9 s), a phone layout with 44 px buttons and 0 axe-core violations. All 6 bars met.
+- **S16 Trial flow.** Every path a judge could take, walked in a phone browser with a fake clock and planted YouCam answers, so 0 units: a full trial to "Working" and the certificate, refusals, referrals, products with no fair test, no room to show a change, "Stop and check", a paused analysis, voice off, and the sun warning. All 6 bars met.
+- **S17 Design and access.** One design system, every screen by keyboard alone, screen-reader roles and names, dark mode, reduced motion and spoken prompts. 14 held-out paths: 191 of 191 screen checks in both colour schemes with 0 serious or critical axe-core findings. All 10 bars met. No real screen reader was run.
+- **S18 Demo.** A labelled demo trial in under a minute: 15 of 15 check-ins match an independent R version of the verdict engine, 132 of 132 views labelled as a demo, a stored real trial left untouched, 0 units. All 7 bars met.
+
+## Tests, CI and the live site (S19 and S20)
+
+- **S19 Tests and CI.** A claim linter built on public rules for cosmetic and health claims (EU Regulation 655/2013 and the EU technical document on claims, the US FD&C Act section 201(g)(1), FDA and FTC guidance, and India's 1954 Act on objectionable advertisements): 300 of 300 seeded claims caught at their lines and 100 of 100 near-misses left alone. The verdict engine matched its R version on 1,000 of 1,000 cases. CI was green from clean copies on Linux and Windows, end-to-end smoke included. All 4 bars met.
+- **S20 Live.** Deployed to Vercel: the deployed files matched the frozen files one for one, the key is stored as a Sensitive variable, every response carries the security headers, and a monitor checks the site. 4 of 5 bars met. Missed: 1 of 14 fresh audit paths stalled at the camera, because a connection hung while the face finder was loading. The fix, built in S21: the app downloads the face finder itself, drops a download that gets no bytes for 10 s and tries again (3 tries), keeps a copy on the phone, serves the files under versioned names cached for a year, starts loading before the camera opens, and says when the face finder is loading or could not load.

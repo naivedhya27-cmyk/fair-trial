@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    .fill { fill: #0f766e; }
+    .line { stroke: #1c1917; }
+    @media (prefers-color-scheme: dark) {
+      .fill { fill: #2dd4bf; }
+      .line { stroke: #f5f5f4; }
+    }
+  </style>
+  <path class="fill" d="M16 3.5C9.6 3.5 5.5 9 5.5 16S9.6 28.5 16 28.5Z" />
+  <path class="line" d="M16 3.5c6.4 0 10.5 5.5 10.5 12.5S22.4 28.5 16 28.5" fill="none" stroke-width="2.2" />
+  <path class="line" d="M16 3.5v25" stroke-width="1.6" stroke-dasharray="2.2 2.2" />
+</svg>

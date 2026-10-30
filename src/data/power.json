@@ -1,0 +1,56 @@
+[
+  {
+    "concern": "texture",
+    "recovered": 0.51,
+    "worst": 48.6,
+    "best": 68.9
+  },
+  {
+    "concern": "oiliness",
+    "recovered": 0.54,
+    "worst": 52.5,
+    "best": 71.8
+  },
+  {
+    "concern": "redness",
+    "recovered": 0.66,
+    "worst": 68,
+    "best": 83.4
+  },
+  {
+    "concern": "age_spot",
+    "recovered": 0.7,
+    "worst": 73.2,
+    "best": 87.2
+  },
+  {
+    "concern": "moisture",
+    "recovered": 0.92,
+    "worst": 90.6,
+    "best": 97.2
+  },
+  {
+    "concern": "wrinkle",
+    "recovered": 0.96,
+    "worst": 93.1,
+    "best": 98.3
+  },
+  {
+    "concern": "dark_circle_v2",
+    "recovered": 0.98,
+    "worst": 94.3,
+    "best": 98.8
+  },
+  {
+    "concern": "eye_bag",
+    "recovered": 1,
+    "worst": 95.6,
+    "best": 99.4
+  },
+  {
+    "concern": "tear_trough",
+    "recovered": 1.03,
+    "worst": 95.6,
+    "best": 99.4
+  }
+]

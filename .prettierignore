@@ -1,0 +1,16 @@
+# Generated or vendored files, kept byte for byte
+.next/
+node_modules/
+public/mediapipe/
+public/models/
+public/demo/
+src/data/
+test/fixtures/
+test-results/
+playwright-report/
+package-lock.json
+next-env.d.ts
+AGENTS.md
+# The validation steps' scripts, kept byte for byte as they ran (scripts/copy-mediapipe.mjs is part of the install)
+scripts/*
+!scripts/copy-mediapipe.mjs

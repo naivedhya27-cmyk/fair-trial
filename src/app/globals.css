@@ -1,0 +1,201 @@
+@import "tailwindcss";
+
+/* Fair Trial design tokens (S17). Warm paper neutrals, one teal accent for the product side, and a colour for each
+   verdict state; every state also carries an icon and words, so colour is never the only cue. Text colours meet
+   WCAG AA (4.5:1) on both surfaces in light and dark; lines and chart marks meet 3:1. */
+:root {
+  --bg: #f6f4f1;
+  --surface: #ffffff;
+  --surface-2: #faf8f6;
+  --ink: #1c1917;
+  --muted: #57534e;
+  --line: #e2ddd7;
+  --line-strong: #8a837c;
+  --accent: #0f766e;
+  --accent-strong: #115e59;
+  --accent-ink: #ffffff;
+  --accent-soft: #e3f3ef;
+  --good: #15803d;
+  --good-soft: #eaf6ee;
+  --warn: #a8510a;
+  --warn-soft: #fcf1e4;
+  --stop: #b91c1c;
+  --stop-soft: #fbeceb;
+  --focus: #1d4ed8;
+  --bare: #78716c;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f0e0d;
+    --surface: #1a1816;
+    --surface-2: #211f1c;
+    --ink: #f5f5f4;
+    --muted: #bdb7b1;
+    --line: #38342f;
+    --line-strong: #8f8881;
+    --accent: #2dd4bf;
+    --accent-strong: #5eead4;
+    --accent-ink: #042f2e;
+    --accent-soft: #10302c;
+    --good: #4ade80;
+    --good-soft: #112a1a;
+    --warn: #fbbf24;
+    --warn-soft: #2d2210;
+    --stop: #fb8b8b;
+    --stop-soft: #321616;
+    --focus: #93c5fd;
+    --bare: #a8a29e;
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-good: var(--good);
+  --color-good-soft: var(--good-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-stop: var(--stop);
+  --color-stop-soft: var(--stop-soft);
+  --color-focus: var(--focus);
+  --color-bare: var(--bare);
+  /* earlier names, kept for the lab and the camera check */
+  --color-background: var(--bg);
+  --color-foreground: var(--ink);
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+html {
+  background: var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* One focus ring for every control: 3 px, offset, in a colour with at least 3:1 against both surfaces. */
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+[tabindex="-1"]:focus {
+  outline: none;
+}
+
+/* While the full-screen camera is open the app bar and the skip link are out of the page, not just covered. */
+body[data-camera] [data-app-bar],
+body[data-camera] [data-skip-link] {
+  display: none;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+  accent-color: var(--accent);
+}
+
+/* Motion: short, purposeful, and only when the phone hasn't asked for less. */
+@keyframes ft-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes ft-reveal {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ft-rise {
+    animation: ft-rise 220ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+  .ft-reveal {
+    animation: ft-reveal 320ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+  .ft-press {
+    transition:
+      transform 120ms ease-out,
+      background-color 150ms ease-out,
+      border-color 150ms ease-out;
+  }
+  .ft-press:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+}
+/* Reduced motion: animations end at once, and nothing transitions at all (a near-zero duration would still tween every
+   property for a frame, focus rings included, from their resting colour). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* The certificate prints on white, without the app's chrome, in the light colours even from a phone in dark mode. */
+@media print {
+  :root {
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --surface-2: #faf8f6;
+    --ink: #1c1917;
+    --muted: #57534e;
+    --line: #e2ddd7;
+    --line-strong: #8a837c;
+    --accent: #0f766e;
+    --accent-strong: #115e59;
+    --accent-ink: #ffffff;
+    --accent-soft: #e3f3ef;
+    --good: #15803d;
+    --good-soft: #eaf6ee;
+    --warn: #a8510a;
+    --warn-soft: #fcf1e4;
+    --stop: #b91c1c;
+    --stop-soft: #fbeceb;
+    --bare: #78716c;
+    color-scheme: light;
+  }
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    print-color-adjust: exact;
+  }
+  [data-app-bar],
+  [data-skip-link] {
+    display: none !important;
+  }
+  section {
+    break-inside: avoid;
+    box-shadow: none !important;
+  }
+}

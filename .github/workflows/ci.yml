@@ -1,0 +1,57 @@
+# Fair Trial CI (validation step S19; the format check and manual runs added in S21). Every push to main, every pull
+# request, and on demand (the S21 held-out run starts one on the frozen commit):
+#   check: lint (0 warnings), the Prettier format check, typecheck, unit tests (claim linter, safety guard with the 900
+#          S13 intake cases, planner, trial calendar and record, the verdict engine against its R twin, the face
+#          finder's downloads, the judges' code and the two floors), the claim linter over every text a person can
+#          see, and a production build;
+#   e2e:   the end-to-end smoke on a production build in Chromium on a phone profile (home, a whole demo trial, and
+#          a retinol trial whose stored record must keep its sun warning), with axe-core in light and dark.
+# No secrets are used: nothing here calls YouCam.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run ci
+
+  e2e:
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - run: npm run e2e
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 7

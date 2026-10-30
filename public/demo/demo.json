@@ -1,0 +1,579 @@
+{
+  "version": 1,
+  "person": {
+    "name": "Ana",
+    "age": 45,
+    "photo": "/demo/ana.jpg",
+    "alt": "A woman in her mid-forties with brown skin, freckles and her hair pulled back, facing the camera."
+  },
+  "product": {
+    "name": "Demo Night Serum",
+    "type": "face_leave_on",
+    "ingredients": "Aqua, Glycerin, Caprylic/Capric Triglyceride, Squalane, Retinol, Tocopherol, Polysorbate 20, Carbomer, Phenoxyethanol"
+  },
+  "goal": "wrinkle",
+  "side": "subject_left",
+  "outcomes": [
+    {
+      "id": "works",
+      "label": "It works",
+      "about": "The product side gets a little better each week.",
+      "photos": [
+        {
+          "day": "2026-01-05",
+          "time": "09:00",
+          "raw": 63.184,
+          "density": {
+            "subject_left": 51.8511,
+            "subject_right": 45.1149
+          }
+        },
+        {
+          "day": "2026-01-05",
+          "time": "09:01",
+          "raw": 66.722,
+          "density": {
+            "subject_left": 49.8149,
+            "subject_right": 44.0103
+          }
+        },
+        {
+          "day": "2026-01-06",
+          "time": "09:00",
+          "raw": 67.286,
+          "density": {
+            "subject_left": 46.871,
+            "subject_right": 44.5596
+          }
+        },
+        {
+          "day": "2026-01-06",
+          "time": "09:01",
+          "raw": 67.203,
+          "density": {
+            "subject_left": 45.2338,
+            "subject_right": 43.1855
+          }
+        },
+        {
+          "day": "2026-01-07",
+          "time": "09:00",
+          "raw": 65.995,
+          "density": {
+            "subject_left": 48.2636,
+            "subject_right": 42.5549
+          }
+        },
+        {
+          "day": "2026-01-07",
+          "time": "09:01",
+          "raw": 71.091,
+          "density": {
+            "subject_left": 50.8928,
+            "subject_right": 44.8883
+          }
+        },
+        {
+          "day": "2026-01-08",
+          "time": "09:00",
+          "raw": 65.688,
+          "density": {
+            "subject_left": 51.6903,
+            "subject_right": 45.848
+          }
+        },
+        {
+          "day": "2026-01-08",
+          "time": "09:01",
+          "raw": 66.796,
+          "density": {
+            "subject_left": 48.2682,
+            "subject_right": 44.4562
+          }
+        },
+        {
+          "day": "2026-01-23",
+          "time": "09:00",
+          "raw": 65.827,
+          "density": {
+            "subject_left": 45.9256,
+            "subject_right": 43.8646
+          }
+        },
+        {
+          "day": "2026-01-23",
+          "time": "09:01",
+          "raw": 67.923,
+          "density": {
+            "subject_left": 50.1247,
+            "subject_right": 44.147
+          }
+        },
+        {
+          "day": "2026-02-06",
+          "time": "09:00",
+          "raw": 66.651,
+          "density": {
+            "subject_left": 51.398,
+            "subject_right": 44.9518
+          }
+        },
+        {
+          "day": "2026-02-06",
+          "time": "09:01",
+          "raw": 66.123,
+          "density": {
+            "subject_left": 51.23,
+            "subject_right": 44.49
+          }
+        },
+        {
+          "day": "2026-02-07",
+          "time": "09:00",
+          "raw": 66.4,
+          "density": {
+            "subject_left": 48.953,
+            "subject_right": 44.2361
+          }
+        },
+        {
+          "day": "2026-02-07",
+          "time": "09:01",
+          "raw": 65.1,
+          "density": {
+            "subject_left": 45.1169,
+            "subject_right": 44.0181
+          }
+        },
+        {
+          "day": "2026-04-03",
+          "time": "09:00",
+          "raw": 65.985,
+          "density": {
+            "subject_left": 37.927,
+            "subject_right": 44.9886
+          }
+        },
+        {
+          "day": "2026-04-03",
+          "time": "09:01",
+          "raw": 67.572,
+          "density": {
+            "subject_left": 37.4657,
+            "subject_right": 42.0571
+          }
+        },
+        {
+          "day": "2026-04-04",
+          "time": "09:00",
+          "raw": 65.027,
+          "density": {
+            "subject_left": 40.5882,
+            "subject_right": 44.3312
+          }
+        },
+        {
+          "day": "2026-04-04",
+          "time": "09:01",
+          "raw": 66.446,
+          "density": {
+            "subject_left": 42.2156,
+            "subject_right": 43.6042
+          }
+        },
+        {
+          "day": "2026-04-05",
+          "time": "09:00",
+          "raw": 62.507,
+          "density": {
+            "subject_left": 39.4403,
+            "subject_right": 45.0039
+          }
+        },
+        {
+          "day": "2026-04-05",
+          "time": "09:01",
+          "raw": 68.468,
+          "density": {
+            "subject_left": 39.8321,
+            "subject_right": 42.5882
+          }
+        }
+      ]
+    },
+    {
+      "id": "nothing",
+      "label": "It does nothing",
+      "about": "The product changes nothing; only day-to-day noise moves the numbers.",
+      "photos": [
+        {
+          "day": "2026-01-05",
+          "time": "09:00",
+          "raw": 63.184,
+          "density": {
+            "subject_left": 51.8511,
+            "subject_right": 45.1149
+          }
+        },
+        {
+          "day": "2026-01-05",
+          "time": "09:01",
+          "raw": 66.722,
+          "density": {
+            "subject_left": 49.8149,
+            "subject_right": 44.0103
+          }
+        },
+        {
+          "day": "2026-01-06",
+          "time": "09:00",
+          "raw": 67.286,
+          "density": {
+            "subject_left": 46.871,
+            "subject_right": 44.5596
+          }
+        },
+        {
+          "day": "2026-01-06",
+          "time": "09:01",
+          "raw": 67.203,
+          "density": {
+            "subject_left": 45.2338,
+            "subject_right": 43.1855
+          }
+        },
+        {
+          "day": "2026-01-07",
+          "time": "09:00",
+          "raw": 65.995,
+          "density": {
+            "subject_left": 48.2636,
+            "subject_right": 42.5549
+          }
+        },
+        {
+          "day": "2026-01-07",
+          "time": "09:01",
+          "raw": 71.091,
+          "density": {
+            "subject_left": 50.8928,
+            "subject_right": 44.8883
+          }
+        },
+        {
+          "day": "2026-01-08",
+          "time": "09:00",
+          "raw": 65.688,
+          "density": {
+            "subject_left": 51.6903,
+            "subject_right": 45.848
+          }
+        },
+        {
+          "day": "2026-01-08",
+          "time": "09:01",
+          "raw": 66.796,
+          "density": {
+            "subject_left": 48.2682,
+            "subject_right": 44.4562
+          }
+        },
+        {
+          "day": "2026-01-23",
+          "time": "09:00",
+          "raw": 65.827,
+          "density": {
+            "subject_left": 47.4269,
+            "subject_right": 43.8646
+          }
+        },
+        {
+          "day": "2026-01-23",
+          "time": "09:01",
+          "raw": 67.923,
+          "density": {
+            "subject_left": 51.626,
+            "subject_right": 44.147
+          }
+        },
+        {
+          "day": "2026-02-06",
+          "time": "09:00",
+          "raw": 66.651,
+          "density": {
+            "subject_left": 54.4006,
+            "subject_right": 44.9518
+          }
+        },
+        {
+          "day": "2026-02-06",
+          "time": "09:01",
+          "raw": 66.123,
+          "density": {
+            "subject_left": 54.2325,
+            "subject_right": 44.49
+          }
+        },
+        {
+          "day": "2026-02-07",
+          "time": "09:00",
+          "raw": 66.4,
+          "density": {
+            "subject_left": 51.9556,
+            "subject_right": 44.2361
+          }
+        },
+        {
+          "day": "2026-02-07",
+          "time": "09:01",
+          "raw": 65.1,
+          "density": {
+            "subject_left": 48.1194,
+            "subject_right": 44.0181
+          }
+        },
+        {
+          "day": "2026-04-03",
+          "time": "09:00",
+          "raw": 65.985,
+          "density": {
+            "subject_left": 46.9346,
+            "subject_right": 44.9886
+          }
+        },
+        {
+          "day": "2026-04-03",
+          "time": "09:01",
+          "raw": 67.572,
+          "density": {
+            "subject_left": 46.4734,
+            "subject_right": 42.0571
+          }
+        },
+        {
+          "day": "2026-04-04",
+          "time": "09:00",
+          "raw": 65.027,
+          "density": {
+            "subject_left": 49.5958,
+            "subject_right": 44.3312
+          }
+        },
+        {
+          "day": "2026-04-04",
+          "time": "09:01",
+          "raw": 66.446,
+          "density": {
+            "subject_left": 51.2232,
+            "subject_right": 43.6042
+          }
+        },
+        {
+          "day": "2026-04-05",
+          "time": "09:00",
+          "raw": 62.507,
+          "density": {
+            "subject_left": 48.4479,
+            "subject_right": 45.0039
+          }
+        },
+        {
+          "day": "2026-04-05",
+          "time": "09:01",
+          "raw": 68.468,
+          "density": {
+            "subject_left": 48.8397,
+            "subject_right": 42.5882
+          }
+        }
+      ]
+    },
+    {
+      "id": "irritates",
+      "label": "It irritates first, then works",
+      "about": "The skin reacts in the first two weeks, as it often does when starting retinol, then gets better.",
+      "photos": [
+        {
+          "day": "2026-01-05",
+          "time": "09:00",
+          "raw": 63.184,
+          "density": {
+            "subject_left": 51.8511,
+            "subject_right": 45.1149
+          }
+        },
+        {
+          "day": "2026-01-05",
+          "time": "09:01",
+          "raw": 66.722,
+          "density": {
+            "subject_left": 49.8149,
+            "subject_right": 44.0103
+          }
+        },
+        {
+          "day": "2026-01-06",
+          "time": "09:00",
+          "raw": 67.286,
+          "density": {
+            "subject_left": 46.871,
+            "subject_right": 44.5596
+          }
+        },
+        {
+          "day": "2026-01-06",
+          "time": "09:01",
+          "raw": 67.203,
+          "density": {
+            "subject_left": 45.2338,
+            "subject_right": 43.1855
+          }
+        },
+        {
+          "day": "2026-01-07",
+          "time": "09:00",
+          "raw": 65.995,
+          "density": {
+            "subject_left": 48.2636,
+            "subject_right": 42.5549
+          }
+        },
+        {
+          "day": "2026-01-07",
+          "time": "09:01",
+          "raw": 71.091,
+          "density": {
+            "subject_left": 50.8928,
+            "subject_right": 44.8883
+          }
+        },
+        {
+          "day": "2026-01-08",
+          "time": "09:00",
+          "raw": 65.688,
+          "density": {
+            "subject_left": 51.6903,
+            "subject_right": 45.848
+          }
+        },
+        {
+          "day": "2026-01-08",
+          "time": "09:01",
+          "raw": 66.796,
+          "density": {
+            "subject_left": 48.2682,
+            "subject_right": 44.4562
+          }
+        },
+        {
+          "day": "2026-01-23",
+          "time": "09:00",
+          "raw": 65.827,
+          "density": {
+            "subject_left": 56.4345,
+            "subject_right": 43.8646
+          }
+        },
+        {
+          "day": "2026-01-23",
+          "time": "09:01",
+          "raw": 67.923,
+          "density": {
+            "subject_left": 60.6336,
+            "subject_right": 44.147
+          }
+        },
+        {
+          "day": "2026-02-06",
+          "time": "09:00",
+          "raw": 66.651,
+          "density": {
+            "subject_left": 51.398,
+            "subject_right": 44.9518
+          }
+        },
+        {
+          "day": "2026-02-06",
+          "time": "09:01",
+          "raw": 66.123,
+          "density": {
+            "subject_left": 51.23,
+            "subject_right": 44.49
+          }
+        },
+        {
+          "day": "2026-02-07",
+          "time": "09:00",
+          "raw": 66.4,
+          "density": {
+            "subject_left": 48.953,
+            "subject_right": 44.2361
+          }
+        },
+        {
+          "day": "2026-02-07",
+          "time": "09:01",
+          "raw": 65.1,
+          "density": {
+            "subject_left": 45.1169,
+            "subject_right": 44.0181
+          }
+        },
+        {
+          "day": "2026-04-03",
+          "time": "09:00",
+          "raw": 65.985,
+          "density": {
+            "subject_left": 37.927,
+            "subject_right": 44.9886
+          }
+        },
+        {
+          "day": "2026-04-03",
+          "time": "09:01",
+          "raw": 67.572,
+          "density": {
+            "subject_left": 37.4657,
+            "subject_right": 42.0571
+          }
+        },
+        {
+          "day": "2026-04-04",
+          "time": "09:00",
+          "raw": 65.027,
+          "density": {
+            "subject_left": 40.5882,
+            "subject_right": 44.3312
+          }
+        },
+        {
+          "day": "2026-04-04",
+          "time": "09:01",
+          "raw": 66.446,
+          "density": {
+            "subject_left": 42.2156,
+            "subject_right": 43.6042
+          }
+        },
+        {
+          "day": "2026-04-05",
+          "time": "09:00",
+          "raw": 62.507,
+          "density": {
+            "subject_left": 39.4403,
+            "subject_right": 45.0039
+          }
+        },
+        {
+          "day": "2026-04-05",
+          "time": "09:01",
+          "raw": 68.468,
+          "density": {
+            "subject_left": 39.8321,
+            "subject_right": 42.5882
+          }
+        }
+      ]
+    }
+  ]
+}

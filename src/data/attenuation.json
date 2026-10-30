@@ -1,0 +1,92 @@
+[
+  {
+    "concern": "texture",
+    "split_use": "usable",
+    "n": 6,
+    "recovered": 0.509,
+    "recovered_min": 0.2857,
+    "leak_share": 0.4319,
+    "leaks": 4
+  },
+  {
+    "concern": "oiliness",
+    "split_use": "usable",
+    "n": 6,
+    "recovered": 0.537,
+    "recovered_min": 0.4662,
+    "leak_share": 0.4171,
+    "leaks": 4
+  },
+  {
+    "concern": "redness",
+    "split_use": "usable",
+    "n": 2,
+    "recovered": 0.6614,
+    "recovered_min": 0.5871,
+    "leak_share": 0.1562,
+    "leaks": 1
+  },
+  {
+    "concern": "age_spot",
+    "split_use": "usable",
+    "n": 6,
+    "recovered": 0.6992,
+    "recovered_min": -0.0036,
+    "leak_share": 0.2923,
+    "leaks": 6
+  },
+  {
+    "concern": "moisture",
+    "split_use": "usable",
+    "n": 6,
+    "recovered": 0.9166,
+    "recovered_min": 0.89,
+    "leak_share": 0.0255,
+    "leaks": 0
+  },
+  {
+    "concern": "wrinkle",
+    "split_use": "usable",
+    "n": 6,
+    "recovered": 0.9605,
+    "recovered_min": 0.8585,
+    "leak_share": 0.0269,
+    "leaks": 1
+  },
+  {
+    "concern": "dark_circle_v2",
+    "split_use": "usable",
+    "n": 6,
+    "recovered": 0.9753,
+    "recovered_min": 0.8874,
+    "leak_share": 0.0031,
+    "leaks": 0
+  },
+  {
+    "concern": "eye_bag",
+    "split_use": "usable",
+    "n": 6,
+    "recovered": 0.9999,
+    "recovered_min": 0.9299,
+    "leak_share": 0.0024,
+    "leaks": 0
+  },
+  {
+    "concern": "tear_trough",
+    "split_use": "usable",
+    "n": 6,
+    "recovered": 1.0311,
+    "recovered_min": 0.6513,
+    "leak_share": -0.0182,
+    "leaks": 0
+  },
+  {
+    "concern": "pore",
+    "split_use": "marginal",
+    "n": 5,
+    "recovered": 0.7344,
+    "recovered_min": -1.6821,
+    "leak_share": 0.2279,
+    "leaks": 1
+  }
+]
