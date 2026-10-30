@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # S21b: the S16, S17 and S18 audits against a deployed site (prereg in R/s21b_score.R), runners and scorers unchanged,
-# each with the network probe beside it (scripts/s21b-probe.mjs). An S16 or S17 path that crashed is run once more,
-# alone, when its crash record shows a request to the site outside /api/ in flight for 10 s or more (R/s21b_merge.R
-# pick); the merged record (R/s21b_merge.R merge) is what the step's scorer reads. S18's B7 reads the merged S17.
+# each with the network probe beside it (scripts/s21b-probe.mjs). An S16 or S17 path that crashed is run again, alone,
+# when its crash record shows a request to the site outside /api/ in flight for 10 s or more (R/s21b_merge.R pick), up
+# to 5 passes in all; the merged record (R/s21b_merge.R merge) is what the step's scorer reads. A crash without that
+# evidence stands, and so does a path that still crashes in its fifth pass. S18's B7 reads the merged S17.
 # Every YouCam call the pages make is answered by the runners, so the audits spend 0 units.
 # Usage (from the app folder): bash scripts/s21b-audits.sh <pathsDir> <outDir> <base>
 #   <pathsDir> holds paths_s16.json, paths_s17.json and s18/ (R/s20_paths.R)
@@ -31,19 +32,24 @@ audit() { # <name> <script> <paths> <out> [only]: one runner pass with the probe
   echo "$1: balance after $b1; end $(date +%H:%M:%S)"
   printf '{"before": %s, "after": %s}\n' "$b0" "$b1" > "$4/balances.json"
 }
-with_reruns() { # <name> <script> <paths> <out>: the first pass, then the stalled paths once more, merged
+with_reruns() { # <name> <script> <paths> <out>: the first pass, then the stalled paths again, up to 5 passes in all;
+  # the record after the last pass is <out>/merged
   audit "$1" "$2" "$3" "$4/first"
-  local ids
-  ids=$(Rscript ../R/s21b_merge.R pick "$4/first" "$BASE")
-  if [ -n "$ids" ]; then
-    echo "$1: rerunning $ids (crash records show the link stalled)"
-    audit "$1 rerun" "$2" "$3" "$4/rerun" "$ids"
-    Rscript ../R/s21b_merge.R merge "$4/first" "$4/rerun" "$4/merged"
-  else
-    echo "$1: no path to rerun"
-    rm -rf "$4/merged"
-    cp -r "$4/first" "$4/merged"
-  fi
+  local cur="$4/first" ids n=0
+  while ids=$(Rscript ../R/s21b_merge.R pick "$cur" "$BASE") && [ -n "$ids" ]; do
+    if [ "$n" -ge 4 ]; then
+      echo "$1: $ids crashed with the link stalled in all 5 passes; those crashes stand"
+      break
+    fi
+    n=$((n + 1))
+    echo "$1: pass $((n + 1)) for $ids (crash records show the link stalled)"
+    audit "$1 rerun $n" "$2" "$3" "$4/rerun$n" "$ids"
+    Rscript ../R/s21b_merge.R merge "$cur" "$4/rerun$n" "$4/merged$n"
+    cur="$4/merged$n"
+  done
+  [ "$n" -eq 0 ] && echo "$1: no path to rerun"
+  rm -rf "$4/merged"
+  cp -r "$cur" "$4/merged"
 }
 with_reruns S16 scripts/s16-audit.mjs "$P/paths_s16.json" "$O/s16"
 Rscript ../R/s16_score.R "$O/s16/merged" "$P/paths_s16.json" > "$O/s16_score.log" 2>&1
