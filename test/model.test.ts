@@ -4,6 +4,7 @@ import type { Person } from "../src/lib/guard/guard";
 import type { Side } from "../src/lib/metrics/halfface";
 import { plan } from "../src/lib/planner/plan";
 import { addDays, dayOf, drawSide, headroom, newTrial, runIn, settle, today, verdictFor, visitStates, type PhotoRecord, type Trial } from "../src/lib/trial/model";
+import { HEADROOM_WORDS, STOP_WORDS } from "../src/lib/trial/words";
 
 const NIACINAMIDE = "Aqua, Niacinamide, Glycerin, Pentylene Glycol, Zinc PCA, Phenoxyethanol";
 const p = plan(NIACINAMIDE);
@@ -111,6 +112,14 @@ describe("trial evidence", () => {
     const usual = ["2026-11-01", "2026-11-02"].flatMap((d) => two(d, 16, 17, 60));
     expect(headroom(trial(), usual)).toMatchObject({ known: true, ok: true });
     expect(headroom(trial(), usual.slice(0, 1)).known).toBe(false);
+  });
+
+  it("says what YouCam reads when there's no room to show a change, not what the skin is like (S24c)", () => {
+    expect(HEADROOM_WORDS.title("redness")).toBe("Can't measure a change in redness");
+    expect(HEADROOM_WORDS.body("redness", 96.6, true)).toBe("YouCam already scores your redness 97 out of 100, the healthy end of its scale, so a trial can't measure an improvement in it.");
+    expect(HEADROOM_WORDS.body("redness", 80, false)).toBe("YouCam finds very little redness on your face, so a trial can't measure a change in it.");
+    expect(STOP_WORDS.headroom).toBe("The trial stopped because a change on that goal couldn't be measured.");
+    for (const s of [HEADROOM_WORDS.body("redness", 99, true), HEADROOM_WORDS.body("redness", 50, false), STOP_WORDS.headroom]) expect(s).not.toMatch(/nothing left|no room/i);
   });
 
   it("draws either side", () => {

@@ -53,7 +53,18 @@ export const VERDICT_WORDS: Record<Verdict, { title: string; body: (weeks: { ver
 export const STOP_WORDS = {
   user: "You stopped this trial.",
   stop: "The trial stopped because the product side looked worse than the bare side.",
-  headroom: "The trial stopped because there was no room to show an improvement on that goal.",
+  headroom: "The trial stopped because a change on that goal couldn't be measured.",
+};
+
+/** The trial page's notice when the headroom rule (model.ts) flags the goal. It says what YouCam reads, never what the
+ * skin itself is like: YouCam found no redness at all on the type IV to VI faces (S08), so very little in a mask can be
+ * YouCam not finding a concern rather than the skin being clear (S24c). */
+export const HEADROOM_WORDS = {
+  title: (goal: string) => `Can't measure a change in ${goal}`,
+  body: (goal: string, raw: number, healthyEnd: boolean) =>
+    healthyEnd
+      ? `YouCam already scores your ${goal} ${Math.round(raw)} out of 100, the healthy end of its scale, so a trial can't measure an improvement in it.`
+      : `YouCam finds very little ${goal} on your face, so a trial can't measure a change in it.`,
 };
 
 /** What the trial page says about photos still waiting for their analysis, by the last refusal. */

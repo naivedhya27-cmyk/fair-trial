@@ -11,7 +11,7 @@ import { EffectBar, SideFace, ToneMark, VERDICT_LOOK, type IconType } from "@/co
 import { analysePending } from "@/lib/trial/analyse";
 import { dayOf, headroom, HEADROOM, runIn, settle, settled, SIDE_WORDS, today, visitStates, type PhotoRecord, type StoredVerdict, type Today, type Trial } from "@/lib/trial/model";
 import { currentTrial, photosOf, saveTrial } from "@/lib/trial/store";
-import { GOAL_WORDS, RETRY_WORDS, STOP_WORDS, VERDICT_WORDS } from "@/lib/trial/words";
+import { GOAL_WORDS, HEADROOM_WORDS, RETRY_WORDS, STOP_WORDS, VERDICT_WORDS } from "@/lib/trial/words";
 import { preloadLandmarker } from "@/lib/vision/landmarker";
 
 const PURPOSE = { safety: "safety look", first_look: "first look", verdict: "verdict" } as const;
@@ -325,11 +325,10 @@ export default function Dashboard({ demo }: { demo?: DemoFeed }) {
       </Card>
 
       {hr.known && !hr.ok && !trial.stopped && (
-        <Notice tone="warn" label="No room to show a change">
-          <h2 className="text-lg font-semibold">No room to show a change</h2>
+        <Notice tone="warn" label={HEADROOM_WORDS.title(goal)}>
+          <h2 className="text-lg font-semibold">{HEADROOM_WORDS.title(goal)}</h2>
           <p className="text-base leading-relaxed" id="headroom" data-raw={Math.round(hr.raw)}>
-            {hr.raw >= HEADROOM.maxRaw ? `YouCam already scores your ${goal} ${Math.round(hr.raw)} out of 100, the healthy end of its scale.` : `YouCam finds very little ${goal} on your face.`} A
-            trial can&apos;t show an improvement when there&apos;s almost nothing left to improve.
+            {HEADROOM_WORDS.body(goal, hr.raw, hr.raw >= HEADROOM.maxRaw)}
           </p>
           {!demo && (
             <>
