@@ -1,6 +1,7 @@
 // Downloads for the face finder's files (S21): a try that receives nothing for `stallMs` is aborted and the file is
 // fetched again, up to `tries` tries, 1 s then 2 s apart. `onBytes` hears every chunk as it arrives, and the bytes of a
-// try that fails are taken back with a negative count, so a progress figure never runs ahead of what is kept.
+// try that fails are taken back with a negative count, so a progress figure never runs ahead of what is kept. S21b: a
+// fetch priority can be given, so a download started ahead of time never competes with the page's own files.
 
 export const STALL_MS = 10_000;
 export const TRIES = 3;
@@ -10,6 +11,8 @@ export interface DownloadOptions {
   tries?: number;
   /** wait between tries, in ms for the try that just failed (1-based); 1 s, then 2 s by default */
   backoff?: (t: number) => number;
+  /** the browser's fetch priority: "low" for a download started ahead of time, "high" when someone is waiting on it */
+  priority?: RequestPriority;
   fetchImpl?: typeof fetch;
 }
 
@@ -28,7 +31,7 @@ export async function download(url: string, onBytes: (n: number) => void = () =>
     };
     let got = 0;
     try {
-      const res = await get(url, { signal: ac.signal });
+      const res = await get(url, { signal: ac.signal, priority: opts.priority ?? "auto" });
       if (!res.ok || !res.body) throw new Error(`${url}: HTTP ${res.status}`);
       fresh();
       const reader = res.body.getReader();

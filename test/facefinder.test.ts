@@ -79,6 +79,17 @@ describe("download", () => {
     expect(calls).toEqual(["503", "ok"]);
   });
 
+  it("asks the browser for the given fetch priority, and for its default otherwise (S21b)", async () => {
+    const seen: (string | undefined)[] = [];
+    const impl = ((_url: string, init?: RequestInit) => {
+      seen.push(init?.priority);
+      return Promise.resolve(new Response(new Uint8Array(10), { status: 200 }));
+    }) as typeof fetch;
+    await download("/f", () => {}, { ...fast, fetchImpl: impl, priority: "low" });
+    await download("/f", () => {}, { ...fast, fetchImpl: impl });
+    expect(seen).toEqual(["low", "auto"]);
+  });
+
   it("gives up after its tries, with nothing left counted", async () => {
     const { impl, calls } = scripted(["stall", "fail", "hang"]);
     let seen = 0;

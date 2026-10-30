@@ -4,6 +4,8 @@
 // model), keeps a copy in Cache Storage under their version, and hands MediaPipe in-memory copies, so a camera start
 // after the first needs no network. A download that receives nothing for 10 s is fetched again (3 tries), and a load
 // that fails is not kept, so the next camera start begins afresh. Progress is published for the camera screen.
+// S21b: a load started ahead of the camera waits for the page to load and the browser to go idle, and asks at low fetch
+// priority, so on a slow link the page's own files come first; the camera itself asks at high priority.
 import { FaceLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
 import { cachedDownload, pruneCaches } from "./download";
 import { poseFromMatrix, type FaceGeometry } from "./geometry";
@@ -56,16 +58,16 @@ async function quietly<T>(run: () => Promise<T>): Promise<T> {
   }
 }
 
-async function create(): Promise<FaceLandmarker> {
+async function create(priority: RequestPriority): Promise<FaceLandmarker> {
   publish({ phase: "loading", received: 0 });
   const add = (n: number) => publish({ received: Math.max(0, state.received + n) });
   void pruneCaches(CACHE_PREFIX, CACHE);
   // MediaPipe picks the build for this browser (with or without SIMD); only its file names are used here
   const files = await FilesetResolver.forVisionTasks(`/mediapipe/${MEDIAPIPE_VERSION}/wasm`);
   const [loader, wasm, model] = await Promise.all([
-    cachedDownload(CACHE, files.wasmLoaderPath, "text/javascript", add),
-    cachedDownload(CACHE, files.wasmBinaryPath, "application/wasm", add),
-    cachedDownload(CACHE, FACE_MODEL, "application/octet-stream", add),
+    cachedDownload(CACHE, files.wasmLoaderPath, "text/javascript", add, { priority }),
+    cachedDownload(CACHE, files.wasmBinaryPath, "application/wasm", add, { priority }),
+    cachedDownload(CACHE, FACE_MODEL, "application/octet-stream", add, { priority }),
   ]);
   const loaderUrl = URL.createObjectURL(new Blob([loader as Uint8Array<ArrayBuffer>], { type: "text/javascript" }));
   const wasmUrl = URL.createObjectURL(new Blob([wasm as Uint8Array<ArrayBuffer>], { type: "application/wasm" }));
@@ -84,10 +86,11 @@ async function create(): Promise<FaceLandmarker> {
   }
 }
 
-/** The face finder, loaded once per page. A load that fails is dropped, so the next call starts afresh. */
-export function getLandmarker(): Promise<FaceLandmarker> {
+/** The face finder, loaded once per page. A load that fails is dropped, so the next call starts afresh. `priority` is
+ * the fetch priority of a load this call starts; a load already under way keeps its own. */
+export function getLandmarker(priority: RequestPriority = "high"): Promise<FaceLandmarker> {
   if (!imageMode) {
-    const p = create();
+    const p = create(priority);
     imageMode = p;
     p.then(
       () => publish({ phase: "ready", received: Math.max(state.received, state.expected) }),
@@ -100,9 +103,14 @@ export function getLandmarker(): Promise<FaceLandmarker> {
   return imageMode;
 }
 
-/** Start loading the face finder before the camera opens; a failure here is left to the camera, which retries. */
+/** Start loading the face finder before the camera opens, without slowing the page: once the page has loaded and the
+ * browser is idle (at most 3 s later), at low fetch priority. A failure here is left to the camera, which asks again. */
 export function preloadLandmarker(): void {
-  getLandmarker().catch(() => undefined);
+  if (typeof window === "undefined") return;
+  const start = () => void getLandmarker("low").catch(() => undefined);
+  const whenIdle = () => (typeof window.requestIdleCallback === "function" ? window.requestIdleCallback(start, { timeout: 3000 }) : window.setTimeout(start, 1000));
+  if (document.readyState === "complete") whenIdle();
+  else window.addEventListener("load", whenIdle, { once: true });
 }
 
 export interface Detection {
