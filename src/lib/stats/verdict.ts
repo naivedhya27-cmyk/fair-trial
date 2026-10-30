@@ -7,6 +7,8 @@
 //   floor from S08 (prior SEM squared over the photos per day); one-sided Student t on the pooled degrees of freedom.
 // The S11 simulations replaced a z rule that pooled the run-in with the S08 floor: with a few photos and skin noisier
 // than the floor it called "working" too often (reports/s11_REPORT.md).
+// Inside the irritation window a worsening reads "expected adjustment", unless it is larger than capMde times the
+// look's smallest detectable change (S24a): then "stop and check", as outside the window.
 // Verdicts: Working, Not yet, No measurable effect, Stop and check, Expected adjustment, Can't tell.
 import type { Side } from "../metrics/halfface";
 import { T_CRIT, Z_CRIT } from "./ttable";
@@ -20,11 +22,14 @@ export interface EngineSettings {
   alphaStop: number;
   /** never let the person's spread fall below the camera's noise floor */
   floor: boolean;
+  /** inside the irritation window, a worsening beyond this many smallest detectable changes stops the trial (S24a) */
+  capMde?: number;
 }
 
 /** Set on S11 development simulations and frozen for its held-out run (reports/s11_REPORT.md): "working" at 4% so the
- *  5% bar holds with room for simulation error; "stop" at 5% per visit (10% fired falsely in up to a quarter of trials). */
-export const ENGINE: EngineSettings = { alphaWork: 0.04, alphaStop: 0.05, floor: true };
+ *  5% bar holds with room for simulation error; "stop" at 5% per visit (10% fired falsely in up to a quarter of trials).
+ *  The cap was set on S24a development simulations (reports/s24a_REPORT.md). */
+export const ENGINE: EngineSettings = { alphaWork: 0.04, alphaStop: 0.05, floor: true, capMde: 5 };
 
 export interface TrialEvidence {
   /** run-in days (at least 2), each the D values of that day's photos */
@@ -90,9 +95,10 @@ export function decide(e: TrialEvidence, s: EngineSettings = ENGINE): VerdictRes
   const r = { improvement, se, t, df, sigma, mde };
   const inWindow = e.adjustToWeek != null && e.week <= e.adjustToWeek;
   if (t <= -tCrit(s.alphaStop, df)) {
-    return inWindow
-      ? { ...r, verdict: "adjusting", reason: "The product side looks worse, inside the early-irritation window the trials describe." }
-      : { ...r, verdict: "stop", reason: "The product side is worse than the bare side, beyond your noise floor." };
+    if (!inWindow) return { ...r, verdict: "stop", reason: "The product side is worse than the bare side, beyond your noise floor." };
+    if (s.capMde != null && -improvement > s.capMde * mde)
+      return { ...r, verdict: "stop", reason: "The product side is far worse than the bare side, more than the early irritation the trials describe." };
+    return { ...r, verdict: "adjusting", reason: "The product side looks worse, inside the early-irritation window the trials describe." };
   }
   if (e.week < e.verdictWeek) return { ...r, verdict: "not_yet", reason: `Trials judge this at week ${e.verdictWeek}.` };
   if (t >= work) return { ...r, verdict: "working", reason: "The product side improved more than the bare side, beyond your noise floor." };

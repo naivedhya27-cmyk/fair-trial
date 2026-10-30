@@ -160,6 +160,7 @@ export function planFromActives(actives: Detected[], asked?: Concern | null): Pl
   const firstLookWeek = Math.min(...m.map((r) => r.firstLookWeek));
   const verdictWeek = Math.max(...m.map((r) => r.verdictWeek));
   const windows = m.map((r) => r.adjustToWeek).filter((w): w is number => w != null);
+  const adjustToWeek = windows.length ? Math.max(...windows) : null;
   const behind = actives.filter((a) => FAMILY_ROWS[a.family].some((id) => m.some((r) => r.id === id)));
   const p = POWER.get(goal);
   return {
@@ -172,9 +173,9 @@ export function planFromActives(actives: Detected[], asked?: Concern | null): Pl
     rows: ids(m),
     firstLookWeek,
     verdictWeek,
-    adjustToWeek: windows.length ? Math.max(...windows) : null,
-    visits: visits(firstLookWeek, verdictWeek),
-    photos: photoCount(firstLookWeek, verdictWeek),
+    adjustToWeek,
+    visits: visits(firstLookWeek, verdictWeek, adjustToWeek),
+    photos: photoCount(firstLookWeek, verdictWeek, adjustToWeek),
     power: p ? { worst: p.worst, best: p.best } : null,
     belowOnePercent: behind.length > 0 && behind.every((a) => a.belowOnePercent),
     earlyEffects: unique(m.map((r) => r.earlyEffects).filter((e) => e && !e.startsWith("not reported"))),

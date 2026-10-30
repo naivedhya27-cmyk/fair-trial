@@ -146,6 +146,42 @@
           }
         },
         {
+          "day": "2026-02-20",
+          "time": "09:00",
+          "raw": 65.859,
+          "density": {
+            "subject_left": 42.1718,
+            "subject_right": 44.1699
+          }
+        },
+        {
+          "day": "2026-02-20",
+          "time": "09:01",
+          "raw": 68.623,
+          "density": {
+            "subject_left": 46.044,
+            "subject_right": 45.6304
+          }
+        },
+        {
+          "day": "2026-02-21",
+          "time": "09:00",
+          "raw": 66.002,
+          "density": {
+            "subject_left": 44.1529,
+            "subject_right": 44.9604
+          }
+        },
+        {
+          "day": "2026-02-21",
+          "time": "09:01",
+          "raw": 66.782,
+          "density": {
+            "subject_left": 46.9285,
+            "subject_right": 45.6568
+          }
+        },
+        {
           "day": "2026-04-03",
           "time": "09:00",
           "raw": 65.985,
@@ -333,6 +369,42 @@
           }
         },
         {
+          "day": "2026-02-20",
+          "time": "09:00",
+          "raw": 65.859,
+          "density": {
+            "subject_left": 46.6756,
+            "subject_right": 44.1699
+          }
+        },
+        {
+          "day": "2026-02-20",
+          "time": "09:01",
+          "raw": 68.623,
+          "density": {
+            "subject_left": 50.5478,
+            "subject_right": 45.6304
+          }
+        },
+        {
+          "day": "2026-02-21",
+          "time": "09:00",
+          "raw": 66.002,
+          "density": {
+            "subject_left": 48.6567,
+            "subject_right": 44.9604
+          }
+        },
+        {
+          "day": "2026-02-21",
+          "time": "09:01",
+          "raw": 66.782,
+          "density": {
+            "subject_left": 51.4323,
+            "subject_right": 45.6568
+          }
+        },
+        {
           "day": "2026-04-03",
           "time": "09:00",
           "raw": 65.985,
@@ -517,6 +589,42 @@
           "density": {
             "subject_left": 45.1169,
             "subject_right": 44.0181
+          }
+        },
+        {
+          "day": "2026-02-20",
+          "time": "09:00",
+          "raw": 65.859,
+          "density": {
+            "subject_left": 42.1718,
+            "subject_right": 44.1699
+          }
+        },
+        {
+          "day": "2026-02-20",
+          "time": "09:01",
+          "raw": 68.623,
+          "density": {
+            "subject_left": 46.044,
+            "subject_right": 45.6304
+          }
+        },
+        {
+          "day": "2026-02-21",
+          "time": "09:00",
+          "raw": 66.002,
+          "density": {
+            "subject_left": 44.1529,
+            "subject_right": 44.9604
+          }
+        },
+        {
+          "day": "2026-02-21",
+          "time": "09:01",
+          "raw": 66.782,
+          "density": {
+            "subject_left": 46.9285,
+            "subject_right": 45.6568
           }
         },
         {

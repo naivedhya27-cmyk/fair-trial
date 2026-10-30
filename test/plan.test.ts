@@ -10,24 +10,38 @@ const PLAIN = "Aqua, Glycerin, Cetearyl Alcohol, Dimethicone, Shea Butter, Tocop
 const visits = (p: Plan) => p.visits.map((v) => [v.week, v.days, v.purpose]);
 
 describe("trial planner", () => {
-  it("plans retinol on fine lines from its evidence row: a week-2 safety look, a first look, the verdict week", () => {
+  it("plans retinol on fine lines: a week-2 safety look, a first look, a safety look after the irritation window, the verdict week", () => {
     const p = plan(RETINOL_SERUM, "wrinkle");
     expect(p).toMatchObject({ design: "split_face", goal: "wrinkle", rows: ["E02"], firstLookWeek: 4, verdictWeek: 12, adjustToWeek: 4 });
+    // the week-4 first look lies inside the window (week <= 4), so a look at week 6 comes after it (S24a)
     expect(visits(p)).toEqual([
       [2, 1, "safety"],
       [4, 2, "first_look"],
+      [6, 2, "safety"],
       [12, 3, "verdict"],
     ]);
+    expect(p.photos).toBe(2 * (4 + 1 + 2 + 2 + 3));
     expect(p.goals).toEqual(["wrinkle", "texture", "age_spot"]);
   });
 
   it("merges every row that names the goal: earliest first look, latest verdict week, latest irritation window", () => {
     const p = plan(RETINOL_HA, "wrinkle");
     expect(p).toMatchObject({ rows: ["E02", "E11"], firstLookWeek: 2, verdictWeek: 12, adjustToWeek: 4 });
-    // a first look at week 2 is the safety look, so this plan has no look between week 2 and week 12 (S18 finding)
+    // a first look at week 2 is the safety look; the look after the window keeps one between week 2 and week 12 (S18 finding, S24a)
     expect(visits(p)).toEqual([
       [2, 1, "safety"],
+      [6, 2, "safety"],
       [12, 3, "verdict"],
+    ]);
+  });
+
+  it("gives a plan whose first look is week 2 and whose verdict is week 6 or later a look at week 4", () => {
+    const p = plan("Aqua, Sodium Hyaluronate, Glycerin, Phenoxyethanol", "wrinkle");
+    expect(p).toMatchObject({ rows: ["E11"], firstLookWeek: 2, verdictWeek: 8, adjustToWeek: null });
+    expect(visits(p)).toEqual([
+      [2, 1, "safety"],
+      [4, 2, "first_look"],
+      [8, 3, "verdict"],
     ]);
   });
 

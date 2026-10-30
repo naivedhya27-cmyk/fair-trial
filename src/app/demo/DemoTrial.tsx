@@ -13,106 +13,10 @@ import Certificate from "@/app/trial/certificate/Certificate";
 import { fmtDay } from "@/components/DayChart";
 import { IconBack, IconNext, IconPause, IconPlay } from "@/components/icons";
 import { btn, Card, Choice, Screen } from "@/components/ui";
-import type { CaptureStats } from "@/lib/gate/capture";
-import { guard, type ProductType } from "@/lib/guard/guard";
-import type { Side } from "@/lib/metrics/halfface";
-import { FAMILY_NAME } from "@/lib/planner/inci";
-import { plan, type Concern } from "@/lib/planner/plan";
+import { STEP_MS, stopsOf, type DemoData } from "@/lib/demo/stops";
 import { RUN_IN_DAYS } from "@/lib/trial/design";
-import { runIn, settle, SIDE_WORDS, visitStates, type PhotoRecord, type StoredVerdict, type Trial } from "@/lib/trial/model";
+import { SIDE_WORDS } from "@/lib/trial/model";
 import { GOAL_WORDS } from "@/lib/trial/words";
-import type { FaceGeometry } from "@/lib/vision/geometry";
-
-/** How long the player stays on each stop: 11 stops at most, so a whole trial plays in under a minute. */
-const STEP_MS = 5000;
-const PURPOSE = { safety: "safety look", first_look: "first look", verdict: "verdict" } as const;
-
-interface DemoPhoto {
-  day: string;
-  time: string;
-  raw: number;
-  density: Record<Side, number>;
-}
-interface DemoOutcome {
-  id: string;
-  label: string;
-  about: string;
-  photos: DemoPhoto[];
-}
-interface DemoData {
-  version: number;
-  person: { name: string; age: number; photo: string; alt: string };
-  product: { name: string; type: ProductType; ingredients: string };
-  goal: Concern;
-  side: Side;
-  outcomes: DemoOutcome[];
-}
-interface Stop {
-  day: string;
-  label: string;
-  trial: Trial;
-  photos: PhotoRecord[];
-  now: number;
-  fresh: StoredVerdict[];
-}
-
-/** The trial the app would build from these answers (as "Start a trial" does), with the side already drawn. */
-function trialOf(d: DemoData): Trial {
-  const p = plan(d.product.ingredients, d.goal);
-  const g = guard(
-    { age: d.person.age, pregnancy: "no", redFlags: false, underCare: false, prescription: false, medicineProduct: false },
-    { name: d.product.name, type: d.product.type, ingredients: d.product.ingredients },
-  );
-  return {
-    id: "demo",
-    createdAt: new Date(`${d.outcomes[0].photos[0].day}T08:00:00`).getTime(),
-    productName: d.product.name,
-    actives: [...new Set(p.actives.map((a) => FAMILY_NAME[a.family]))],
-    plan: p,
-    goal: p.goal ?? d.goal,
-    concerns: [p.goal ?? d.goal, ...p.goals.filter((c) => c !== p.goal)].slice(0, 4),
-    side: d.side,
-    guard: { action: g.action === "warn" ? "warn" : "proceed", rules: g.findings.map((f) => f.rule) },
-    baseline: null,
-    stopped: null,
-    verdicts: [],
-  };
-}
-
-/** A simulated photo kept the way the app keeps an analysed one. There is no image behind it, so it has no capture
- * statistics or face geometry; nothing on the trial screen or the certificate reads them. */
-const recordOf = (d: DemoData, p: DemoPhoto, i: number): PhotoRecord => ({
-  id: `demo-${i}`,
-  trialId: "demo",
-  day: p.day,
-  takenAt: new Date(`${p.day}T${p.time}:00`).getTime(),
-  blob: new Blob(),
-  stats: null as unknown as CaptureStats,
-  face: null as unknown as FaceGeometry,
-  status: "done",
-  result: { raw: { [d.goal]: p.raw }, density: { [d.goal]: p.density } },
-});
-
-/** Every stop of the demo (each run-in day, the first day of the product, each check-in day) with the trial as it
- * stands that evening: verdicts settle stop by stop, exactly as they would on the phone. */
-function stopsOf(d: DemoData, o: DemoOutcome): Stop[] {
-  const base = trialOf(d);
-  const photos = o.photos.map((p, i) => recordOf(d, p, i));
-  const r = runIn(photos);
-  const days = r.days.map((day, i) => ({ day, label: `Run-in, day ${i + 1} of ${RUN_IN_DAYS}` }));
-  if (r.complete) {
-    days.push({ day: r.startDay!, label: "First day of the product" });
-    for (const v of visitStates(base, photos, r.startDay!)) v.photoDays.forEach((day, j) => days.push({ day, label: `Week ${v.week} ${PURPOSE[v.purpose]}, day ${j + 1} of ${v.days}` }));
-  }
-  let t = base;
-  return days.map(({ day, label }) => {
-    const shown = photos.filter((p) => p.day <= day);
-    const now = new Date(`${day}T20:00:00`).getTime();
-    const s = settle(t, shown, now);
-    t = s.trial;
-    return { day, label, trial: t, photos: shown, now, fresh: s.fresh };
-  });
-}
 
 /** The label on every view of the demo, on screen and on paper. */
 function DemoLabel({ person }: { person: string }) {
